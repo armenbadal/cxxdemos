@@ -41,14 +41,14 @@ public:
   
   list(std::initializer_list<E> els)
   {
-    __p("list(std::initializer_list<E> els)");
+    //__p("list(std::initializer_list<E> els)");
     for( auto& e : els )
       add_to_end(e);
   }
   
   list(const list& l)
   {
-    __p("list(const list& l)");
+    //__p("list(const list& l)");
     _destroy_all(_head);
     for( auto _p = l._head; _p != nullptr; _p = _p->next )
       add_to_end(_p->data);
@@ -57,7 +57,7 @@ public:
   list(list&& l)
     : _head{l._head}, _count{l._count}
   {
-    __p("list(list&& l)");
+    //__p("list(list&& l)");
     l._head = nullptr;
     l._count = 0;
   }
@@ -70,7 +70,7 @@ public:
   
   list& operator=(const list& l)
   {
-    __p("list& operator=(const list& l)");
+    //__p("list& operator=(const list& l)");
     if( this != &l ) {
       _destroy_all(_head);
       for( auto _p = l._head; _p != nullptr; _p = _p->next )
@@ -81,10 +81,10 @@ public:
   
   list& operator=(list&& l)
   {
-    __p("list& operator=(list&& l)");
+    //__p("list& operator=(list&& l)");
     if( this != &l ) {
-      std::exchange(_head, l._head);
-      std::exchange(_count, l._count);
+      _head = std::exchange(l._head, _head);
+      _count = std::exchange(l._count, _count);
     }
     return *this;
   }
@@ -160,7 +160,7 @@ public:
     s << '}';
     return s.str();
   }
-  
+
 private:
   node* _add_after(const E& d, node* r)
   {
@@ -183,8 +183,59 @@ private:
 private:
   node* _head = nullptr;
   size_t _count = 0;
+
+public:
+  class iterator {
+  public:
+    iterator() = default;
+    
+    explicit iterator(const list<E>& l)
+      : _it{l._head}
+    {}
+
+    bool operator!=(const iterator& i)
+    {
+      return _it != i._it;
+    }
+
+    iterator& operator++()
+    {
+      _it = _it->next;
+      return *this;
+    }
+
+    E operator*()
+    {
+      return _it->data;
+    }
+    
+  private:
+    node* _it = nullptr;
+  };
+
+  iterator begin()
+  {
+    return iterator{*this};
+  }
+
+  iterator end()
+  {
+    return {};
+  }
 };
+
+template<typename E>
+decltype(auto) begin(const list<E>& l)
+{
+  return l.begin();
 }
+
+template<typename E>
+decltype(auto) end(const list<E>& l)
+{
+  return l.end();
+}
+} // namespace demo
 
 
 #endif //_LIST_CXX_

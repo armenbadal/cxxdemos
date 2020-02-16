@@ -10,6 +10,11 @@ demo::list<int> f()
   return e0;
 }
 
+void p(demo::list<int> l)
+{
+  std::cout << l.to_string() << std::endl;
+}
+
 int main()
 {
   using namespace std;
@@ -30,9 +35,16 @@ int main()
   demo::list<int> a3;
   a3 = f();
   cout << a3.to_string() << endl;
-  
 
+  for(int e : a3)
+    cout << e << endl;
+
+  for(auto ai = a3.begin(); ai != a3.end(); ++ai)
+    cout << (*ai) << endl;
   
+  demo::list<int> a4{a3};
+  p(std::move(a4));
+
   return 0;
 }
 
