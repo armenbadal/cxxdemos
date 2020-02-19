@@ -1,22 +1,27 @@
 
+#include <algorithm>
 #include <initializer_list>
 #include <iostream>
 #include <iterator>
+#include <memory>
+#include <numeric>
 #include <stack>
 
 template<typename Y>
 class binary_search_tree {
 public:
     struct node {
-        Y data = {};
-        size_t count = 0;
-        node* left = nullptr;
-        node* right = nullptr;
+        Y data{};
+        size_t count{0};
+        std::shared_ptr<node> left{nullptr};
+        std::shared_ptr<node> right{nullptr};
 
-        node(const Y& d, node* l, node* r)
-            : data{d}, count{1}, left{l}, right{r}
+        node(const Y& d)
+            : data{d}, count{1}
         {}
     };
+
+    using node_sp = std::shared_ptr<node>;
 
 public:
     using value_type = Y;
@@ -31,7 +36,6 @@ public:
 
     ~binary_search_tree()
     {
-        destroy(_root);
         _root = nullptr;
     }
 
@@ -47,10 +51,10 @@ public:
     }
 
 private:
-    node* add(const Y& v, node* r)
+    decltype(auto) add(const Y& v, node_sp r)
     {
         if( r == nullptr )
-            return new node(v, nullptr, nullptr);
+            return std::make_shared<node>(v);
 
         if( v < r->data )
             r->left = add(v, r->left);
@@ -62,20 +66,8 @@ private:
         return r;
     }
 
-    void destroy(node* r)
-    {
-        if( r != nullptr ) {
-            if( r->left == nullptr && r->right == nullptr )
-                delete r;
-            else {
-                destroy(r->left);
-                destroy(r->right);
-            }
-        }
-    }
-
 private:
-    node* _root = nullptr;
+    node_sp _root{nullptr};
 
 public:
     class iterator {
@@ -99,7 +91,7 @@ public:
 
         bool operator!=(const iterator& other)
         {
-            return _bi != other._bi; // TODO review
+            return _bi != other._bi;
         }
 
         iterator& operator++()
@@ -125,8 +117,8 @@ public:
         }
 
     private:
-        node* _bi = nullptr;
-        std::stack<node*> _stack;
+        node_sp _bi{nullptr};
+        std::stack<node_sp> _stack;
     };
 
     iterator begin()
@@ -146,8 +138,7 @@ int main()
 {
     using namespace std;
 
-    binary_search_tree<int> b0;
-    b0 << 5 << 2 << 8 << 11 << 15 << 6 << 1 << 4;
+    binary_search_tree<int> b0{5, 2, 8, 11, 15, 6, 1, 4};
 
     for( int e : b0 )
         cout << e << ' ';
@@ -160,6 +151,8 @@ int main()
         cout << e << ' ';
     cout << endl;
 
+    for_each(b1.begin(), b1.end(), [&](auto e) { cout << e << '*'; });
+    auto k = reduce(b1.begin(), b1.end(), 0);
 
     return 0;
 }
