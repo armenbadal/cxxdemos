@@ -21,8 +21,36 @@ namespace sort {
                 std::swap(arr[j], arr[j-1]);
     }
 
-    void merge()
-    {}
+    template<typename E, size_t N>
+    void merge(std::array<E,N>& ar, size_t l, size_t h, std::array<E,N> ax)
+    {
+        if( h <= l )
+            return;
+
+        size_t m = l + (h - l) / 2;
+        merge(ar, l, m, ax);
+        merge(ar, m+1, h, ax);
+
+        for( size_t k = l, i = l, j = m + 1; k <= h; ++k )
+            if( i > m )
+                ax[k] = ar[j++];
+            else if( j > h )
+                ax[k] = ar[i++];
+            else if( ar[j] < ar[i] )
+                ax[k] = ar[j++];
+            else
+                ax[k] = ar[i++];
+
+        for( size_t k = l; k <= h; ++k )
+            ar[k] = ax[k];
+    }
+
+    template<typename E, size_t N>
+    void merge(std::array<E,N>& arr)
+    {
+        std::array<E,N> ax;
+        merge(arr, 0, arr.size() - 1, ax);
+    }
 }
 
 template<typename E, size_t N>
@@ -38,6 +66,6 @@ int main()
 {
     std::array<int, 10> a0{6, 1, 0, 5, 7, 2, 9, 3, 4, 8};
     std::cout << a0 << std::endl;
-    sort::insertion(a0);
+    sort::merge(a0);
     std::cout << a0 << std::endl;
 }
