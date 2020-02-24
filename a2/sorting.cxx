@@ -51,6 +51,35 @@ namespace sort {
         std::array<E,N> ax;
         merge(arr, 0, arr.size() - 1, ax);
     }
+    
+        template<typename E>
+    size_t partition(E arr[], size_t l, size_t h)
+    {
+        size_t i = l + 1, j = h;
+        while( true ) {
+            while( arr[i] < arr[l] && i <= h )
+                ++i;
+            while( arr[j] > arr[l] && j >= l )
+                --j;
+            if( i >= j )
+                break;
+            std::swap(arr[i], arr[j]);
+        }
+        std::swap(arr[l], arr[j]);
+
+        return j;
+    }
+
+    template<typename E>
+    void quick(E arr[], size_t l, size_t h)
+    {
+        if( h <= l )
+            return;
+
+        auto m = partition(arr, l, h);
+        quick(arr, l, m - 1);
+        quick(arr, m + 1, h);
+    }
 }
 
 template<typename E, size_t N>
