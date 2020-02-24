@@ -52,8 +52,8 @@ namespace sort {
         merge(arr, 0, arr.size() - 1, ax);
     }
     
-        template<typename E>
-    size_t partition(E arr[], size_t l, size_t h)
+    template<typename E, size_t N>
+    size_t partition(std::array<E,N>& arr, size_t l, size_t h)
     {
         size_t i = l + 1, j = h;
         while( true ) {
@@ -70,8 +70,8 @@ namespace sort {
         return j;
     }
 
-    template<typename E>
-    void quick(E arr[], size_t l, size_t h)
+    template<typename E, size_t N>
+    void quick(std::array<E,N>& arr, size_t l, size_t h)
     {
         if( h > l ) {
             auto m = partition(arr, l, h);
