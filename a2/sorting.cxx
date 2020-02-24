@@ -73,12 +73,11 @@ namespace sort {
     template<typename E>
     void quick(E arr[], size_t l, size_t h)
     {
-        if( h <= l )
-            return;
-
-        auto m = partition(arr, l, h);
-        quick(arr, l, m - 1);
-        quick(arr, m + 1, h);
+        if( h > l ) {
+            auto m = partition(arr, l, h);
+            quick(arr, l, m - 1);
+            quick(arr, m + 1, h);
+        }
     }
 }
 
