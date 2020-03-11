@@ -51,6 +51,11 @@ namespace sort {
         std::array<E,N> ax;
         merge(arr, 0, arr.size() - 1, ax);
     }
+
+    template<typename E, size_t N>
+    void quick(std::array<E,N>& arr)
+    {        
+    }
 }
 
 template<typename E, size_t N>
