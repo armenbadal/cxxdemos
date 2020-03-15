@@ -51,12 +51,6 @@ namespace sort {
         std::array<E,N> ax;
         merge(arr, 0, arr.size() - 1, ax);
     }
-<<<<<<< HEAD
-
-    template<typename E, size_t N>
-    void quick(std::array<E,N>& arr)
-    {        
-=======
     
     template<typename E, size_t N>
     size_t partition(std::array<E,N>& arr, size_t l, size_t h)
@@ -84,7 +78,6 @@ namespace sort {
             quick(arr, l, m - 1);
             quick(arr, m + 1, h);
         }
->>>>>>> 2e88d3e4ba75cf4aab10a6e6b1f5406529af1a7d
     }
 }
 
